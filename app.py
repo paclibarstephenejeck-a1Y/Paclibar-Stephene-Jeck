@@ -1,25 +1,31 @@
+from flask import Flask, jsonify, request
 
-import requests
+app = Flask(__name__)
 
-url = "https://paclibar-stephene-jeck.onrender.com/student"
 
-try:
-    response = requests.get(url, timeout=60)
+@app.route('/')
+def home():
+    return "Welcome to my first API!"
 
-    print("Status Code:", response.status_code)
 
-    if response.status_code == 200:
-        data = response.json()
+@app.route('/student')
+def get_student():
+    return jsonify({
+        "student_id": "24-00266",
+        "name": "Stephene Jeck Paclibar",
+        "program": "BSIT",
+        "year": 3,
+        "section": "B"
+    })
 
-        print("Student ID:", data.get("student_id", "Not found"))
-        print("Name:", data.get("name", "Not found"))
-        print("Program:", data.get("program", "Not found"))
-        print("Year:", data.get("year", "Not found"))
-        print("Section:", data.get("section", "Not found"))
 
-    else:
-        print("Request failed.")
-        print("Response:", response.text)
+@app.route('/hello')
+def say_hello():
+    name = request.args.get('name', 'Student')
+    return jsonify({
+        "message": f"Hello, {name}!"
+    })
 
-except requests.exceptions.RequestException as e:
-    print("Connection error:", e)
+
+if __name__ == '__main__':
+    app.run(debug=True)
